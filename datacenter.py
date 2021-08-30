@@ -42,10 +42,18 @@ class DataCenter:
     @staticmethod
     def plot():
         dcs = DataCenter.dcs
-        plt.plot([obj.x for obj in dcs], [obj.y for obj in dcs], '^')
+        plt.ioff()
+        fig, ax = plt.subplots(nrows=1, ncols=1)  # create figure & 1 axis
+
+        ax.plot(0, 0, 'bD')
+        ax.plot([obj.x for obj in dcs], [obj.y for obj in dcs], '^')
+
         for dc in dcs:
             enabled = list(filter(lambda s: s.status, dc.servers))
             disabled = list(filter(lambda d: d.status == 0, dc.servers))
-            plt.plot([obj.x for obj in enabled], [obj.y for obj in enabled], 'g.')
-            plt.plot([obj.x for obj in disabled], [obj.y for obj in disabled], 'k.')
-        plt.draw()
+            ax.plot([obj.x for obj in enabled], [obj.y for obj in enabled], 'g.')
+            ax.plot([obj.x for obj in disabled], [obj.y for obj in disabled], 'k.')
+
+        fig.savefig('outputs/datacenters.png')  # save the figure to file
+        plt.close(fig)
+

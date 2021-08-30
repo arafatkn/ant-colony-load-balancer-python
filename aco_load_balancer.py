@@ -1,6 +1,7 @@
 import time
 import threading
-from matplotlib import pyplot as plt
+
+from ant_colony_algo import AntColonyAlgo
 from datacenter import DataCenter
 
 
@@ -10,6 +11,8 @@ class AcoLoadBalancer(object):
     def __init__(self, interval=1):
         self.interval = interval
         self.thread = threading.Thread(target=AcoLoadBalancer.run, args=())
+
+    def start(self):
         self.thread.start()
 
     @staticmethod
@@ -20,8 +23,10 @@ class AcoLoadBalancer(object):
         while True:
             if len(AcoLoadBalancer.tasks) > 0:
                 for task in AcoLoadBalancer.tasks:
-                    log.write('Task ' + str(i) + ' (' + str(task.x) + ', ' + str(task.y) + ') Assigned. State: '
-                                                                                           'Executing\n')
+                    server = AntColonyAlgo.find()
+                    server.status = True
+                    log.write('Task ' + str(i) + ' (' + str(task.id) + ') Assigned in Server ' + server.id
+                              + '. State: Executing\n')
                     i += 1
                 AcoLoadBalancer.tasks = list()
                 log.write('Waiting...\n')
