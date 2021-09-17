@@ -30,7 +30,7 @@ class DataCenter:
     def createFromJson():
         if len(DataCenter.dcs) > 0:
             return DataCenter.dcs
-        items = json.load(open('config/datacenters.json'))
+        items = json.load(open('config/datacenters_static.json'))
         dcs = list()
         for item in items:
             dc = DataCenter(item['name'], item['x'], item['y'])
