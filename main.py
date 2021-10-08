@@ -2,7 +2,7 @@ from ant_colony_algo import AntColonyAlgo
 from datacenter import DataCenter
 from handle_tasks import HandleTasks
 from aco_load_balancer import AcoLoadBalancer
-from task import Task
+from execute import Execute
 
 if __name__ == '__main__':
 
@@ -18,3 +18,5 @@ if __name__ == '__main__':
     lb.start()
 
     HandleTasks()
+
+    Execute()
