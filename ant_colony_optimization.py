@@ -1,13 +1,10 @@
 import math
 import random
-
 import numpy as np
 import matplotlib.pyplot as plt
 import time
-
 import warnings
 from datacenter import DataCenter
-
 import numpy.random
 
 warnings.filterwarnings("ignore")
@@ -254,16 +251,30 @@ class AntColonyOptimizer:
         else:
             raise ValueError("Invalid mode!  Choose 'min' or 'max'.")
 
-    def get_best_fit(self):
-        while True:
-            rn = random.randint(0, len(DataCenter.dcs) - 1)
-            rns = random.randint(0, len(DataCenter.dcs[rn].servers) - 1)
+    def get_best_fit(self, task):
+        distance = []
+        for dc in DataCenter.dcs:
+            distance.append(pow(dc.x-task.x, 2)+pow(dc.x-task.x, 2))
 
-            if not DataCenter.dcs[rn].servers[rns].status:
-                DataCenter.dcs[rn].servers[rns].status = True
-                return DataCenter.dcs[rn].servers[rns]
-            else:
-                DataCenter.dcs[rn].servers[rns].status = False
+        distance.sort()
+
+        i = 0
+        while i < len(distance):
+
+            for t in range(len(DataCenter.dcs[i].servers)):
+                rns = random.randint(0, len(DataCenter.dcs[i].servers) - 1)
+
+                if not DataCenter.dcs[i].servers[rns].status:
+                    DataCenter.dcs[i].servers[rns].assign_task(task)
+                    return DataCenter.dcs[i].servers[rns]
+
+            for j in range(len(DataCenter.dcs[i].servers)):
+                if DataCenter.dcs[i].servers[j].status:
+                    print('Trying...')
+
+            i = i + 1
+
+        return False
 
     def plot(self):
         """

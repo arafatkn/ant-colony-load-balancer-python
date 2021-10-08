@@ -1,5 +1,6 @@
 import random
 import string
+import time
 
 
 class Task:
@@ -12,7 +13,12 @@ class Task:
         self.server = ''
         self.x = x
         self.y = y
+        self.start_time = 0
 
     @staticmethod
     def analyzeExecutionTime():
-        return random.randint(100, 500)
+        return random.randint(100, 5000)
+
+    def assign_in_server(self, server):
+        self.server = server.id
+        self.start_time = time.time()

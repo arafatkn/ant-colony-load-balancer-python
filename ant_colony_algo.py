@@ -9,7 +9,7 @@ import numpy as np
 class AntColonyAlgo:
 
     @staticmethod
-    def find():
+    def find(task):
         dcs = DataCenter.dcs
         coordinates = AntColonyAlgo.get_coordinates(dcs)
         nodes = AntColonyAlgo.get_nodes(dcs)
@@ -28,7 +28,7 @@ class AntColonyAlgo:
 
         optimizer.fit(problem, 100, verbose=False)
 
-        best = optimizer.get_best_fit()
+        best = optimizer.get_best_fit(task)
 
         return best
         # optimizer.plot()

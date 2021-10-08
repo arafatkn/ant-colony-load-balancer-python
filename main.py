@@ -10,9 +10,9 @@ if __name__ == '__main__':
     # plt.plot(0, 0, 'bD')
 
     # Creating Datacenter and servers
-    dcs = DataCenter.createFromJson()
+    dcs = DataCenter.loadFromCsv()
     print(DataCenter.dcs)
-    DataCenter.plot()
+    # DataCenter.plot()
 
     lb = AcoLoadBalancer()
     lb.start()

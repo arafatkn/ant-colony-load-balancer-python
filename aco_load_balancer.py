@@ -7,6 +7,7 @@ from datacenter import DataCenter
 
 class AcoLoadBalancer(object):
     tasks = list()
+    running = list()
 
     def __init__(self, interval=1):
         self.interval = interval
@@ -17,20 +18,29 @@ class AcoLoadBalancer(object):
 
     @staticmethod
     def run():
-        log = open('logs/tasks.log', 'w', 1)
-        log.write('Waiting...\n')
+        # log = open('logs/tasks.log', 'w', 1)
+        print('Waiting...\n')
         i = 1
         while True:
             if len(AcoLoadBalancer.tasks) > 0:
                 for task in AcoLoadBalancer.tasks:
-                    server = AntColonyAlgo.find()
-                    server.status = True
-                    log.write('Task ' + str(i) + ' (' + str(task.id) + ') Assigned in Server ' + server.id
-                              + '. State: Executing\n')
+                    server = AntColonyAlgo.find(task)
+                    if not server:
+                        AcoLoadBalancer.checkForCompletion()
+                        server = AntColonyAlgo.find(task)
+                    AcoLoadBalancer.running.append(task)
                     i += 1
                 AcoLoadBalancer.tasks = list()
-                log.write('Waiting...\n')
+                print('Waiting...\n')
 
     @staticmethod
     def add(tasks):
         AcoLoadBalancer.tasks += tasks
+
+    @staticmethod
+    def checkForCompletion():
+        for task in AcoLoadBalancer.running:
+            if task.start_time + task.required_time > time.time():
+                break
+            break
+

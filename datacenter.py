@@ -1,7 +1,10 @@
+import sys
+
 from server import Server
 import json
 import math
 import matplotlib.pyplot as plt
+import csv
 
 
 class DataCenter:
@@ -14,11 +17,11 @@ class DataCenter:
         self.y = y
         self.servers = list()
 
-    def createServers(self):
-        for i in range(self.server_limit):
+    def createServers(self, n=10):
+        for i in range(n):
             x = float(self.x) + 2 * math.cos(i * 40)
             y = float(self.y) + 2 * math.sin(i * 40)
-            self.servers.append(Server(x, y))
+            self.servers.append(Server(x, y, self.name))
 
     def __repr__(self):
         return "\nName: %s, X: %s, Y: %s, Servers: %s" % (self.name, self.x, self.y, len(self.servers))
@@ -40,6 +43,27 @@ class DataCenter:
         return DataCenter.dcs
 
     @staticmethod
+    def loadFromCsv():
+        if len(DataCenter.dcs) > 0:
+            return DataCenter.dcs
+
+        filename = 'data/datacenters.csv'
+        with open(filename, newline='') as f:
+            reader = csv.reader(f)
+            try:
+                next(reader, None)
+                dcs = list()
+                for row in reader:
+                    dc = DataCenter(row[0], int(row[1]), int(row[2]))
+                    dc.createServers(int(row[3]))
+                    dcs.append(dc)
+            except csv.Error as e:
+                sys.exit('file {}, line {}: {}'.format(filename, reader.line_num, e))
+
+        DataCenter.dcs = dcs
+        return DataCenter.dcs
+
+    @staticmethod
     def plot():
         dcs = DataCenter.dcs
         plt.ioff()
@@ -56,4 +80,3 @@ class DataCenter:
 
         fig.savefig('outputs/datacenters.png')  # save the figure to file
         plt.close(fig)
-

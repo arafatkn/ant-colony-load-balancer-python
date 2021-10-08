@@ -2,7 +2,7 @@ import json
 import csv
 import random
 
-f = open('data/datacenters.csv', 'w')
+f = open('data/datacenters.csv', 'w', newline='')
 
 # create the csv writer
 writer = csv.writer(f)
@@ -14,7 +14,7 @@ writer.writerow(row)
 
 dcs = list()
 
-for i in range(100):
+for i in range(10):
     dc = ['DC' + str((i + 1)), random.randint(-100, 100), random.randint(-100, 100), random.randint(5, 10)]
     dcs.append({
         "name": dc[0],
@@ -29,7 +29,7 @@ f.close()
 
 json_data = json.dumps(dcs)
 
-f = open("config/datacenters.json", "w")
+f = open("data/datacenters.json", "w")
 
 f.write(json_data)
 
