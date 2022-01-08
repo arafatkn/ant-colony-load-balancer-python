@@ -15,11 +15,11 @@ class HandleTasks(object):
     @staticmethod
     def run():
         while True:
-            num = random.randint(7, 10)  # input("How many new task: ")
+            num = random.randint(5, 10)  # input("How many new task: ")
             tasks = list()
             for i in range(int(num)):
-                task = Task(random.randint(-20, 20), random.randint(-20, 20))
+                task = Task(random.randint(0, 50), random.randint(0, 50))
                 tasks.append(task)
                 print("Task created: (", task.x, ",", task.y, "). ID:", task.id)
             AcoLoadBalancer.add(tasks)
-            time.sleep(random.randint(13000, 19000))
+            time.sleep(random.randint(10, 15))

@@ -2,7 +2,6 @@ import time
 import threading
 
 from ant_colony_algo import AntColonyAlgo
-from datacenter import DataCenter
 
 
 class AcoLoadBalancer(object):
@@ -19,28 +18,20 @@ class AcoLoadBalancer(object):
     @staticmethod
     def run():
         # log = open('logs/tasks.log', 'w', 1)
-        print('Waiting...\n')
+        print('Waiting...')
         i = 1
         while True:
             if len(AcoLoadBalancer.tasks) > 0:
                 for task in AcoLoadBalancer.tasks:
+                    # print('Task '+task.id+' assigning... finding best server...')
                     server = AntColonyAlgo.find(task)
-                    if not server:
-                        AcoLoadBalancer.checkForCompletion()
-                        server = AntColonyAlgo.find(task)
-                    AcoLoadBalancer.running.append(task)
+                    if server:
+                        AcoLoadBalancer.running.append(task)
                     i += 1
                 AcoLoadBalancer.tasks = list()
-                print('Waiting...\n')
+                print('Waiting for more tasks...')
 
     @staticmethod
     def add(tasks):
         AcoLoadBalancer.tasks += tasks
-
-    @staticmethod
-    def checkForCompletion():
-        for task in AcoLoadBalancer.running:
-            if task.start_time + task.required_time > time.time():
-                break
-            break
 

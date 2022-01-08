@@ -15,17 +15,25 @@ class Execute(object):
     def run():
         while True:
             if len(AcoLoadBalancer.running):
-                time.sleep(3)
-            i = 0
-            while i < len(DataCenter.dcs):
-                j = 0
-                while j < len(DataCenter.dcs[i].servers):
+                time.sleep(1)  # seconds
+
+            for i in range(len(DataCenter.dcs)):
+
+                for j in range(len(DataCenter.dcs[i].servers)):
                     if not DataCenter.dcs[i].servers[j].status:
                         continue
 
-                    k = 0
-                    while k < len(DataCenter.dcs[i].servers[j].tasks):
+                    tl = len(DataCenter.dcs[i].servers[j].tasks)
+
+                    for k in range(tl):
                         task = DataCenter.dcs[i].servers[j].tasks[k]
                         if task.required_time + task.start_time < time.time():
-                            print('Task ' + str(task.id) + ' execution completed ')
+                            print('Task ' + str(task.id) + ' execution completed and removed from server '
+                                  + DataCenter.dcs[i].servers[j].id + ' of ' + DataCenter.dcs[i].name)
                             DataCenter.dcs[i].servers[j].tasks.pop(k)
+
+                    tl = len(DataCenter.dcs[i].servers[j].tasks)
+
+                    # Turn Off Server if no task assigned.
+                    if tl < 1:
+                        DataCenter.dcs[i].servers[j].status = False

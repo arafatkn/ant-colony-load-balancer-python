@@ -21,7 +21,7 @@ class DataCenter:
         for i in range(n):
             x = float(self.x) + 2 * math.cos(i * 40)
             y = float(self.y) + 2 * math.sin(i * 40)
-            self.servers.append(Server(x, y, self.name))
+            self.servers.append(Server(len(self.servers) + 1, x, y, self.name))
 
     def __repr__(self):
         return "\nName: %s, X: %s, Y: %s, Servers: %s" % (self.name, self.x, self.y, len(self.servers))

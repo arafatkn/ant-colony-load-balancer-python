@@ -5,8 +5,9 @@ import time
 
 class Server:
 
-    def __init__(self, x, y, dc_name):
-        self.id = ''.join(random.choice(string.ascii_uppercase) for _ in range(5))
+    def __init__(self, sid, x, y, dc_name):
+        # self.id = ''.join(random.choice(string.ascii_uppercase) for _ in range(5))
+        self.id = str(sid)
         self.status = False
         self.x = x
         self.y = y
@@ -29,5 +30,5 @@ class Server:
         self.tasks.append(task)
         self.status = True
 
-        print('Task ' + str(task.id) + ' Assigned in Server ' + self.id
-              + ' of ' + self.dc_name + '. State: ' + task.state)
+        print('Task ' + str(task.id) + ' Assigned in Server ' + self.id + ' of ' + self.dc_name + '. State: '
+              + task.state + '. Estimated Time Required: ' + str(task.required_time) + 'sec')

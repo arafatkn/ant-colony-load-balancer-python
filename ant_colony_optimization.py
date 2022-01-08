@@ -6,6 +6,7 @@ import time
 import warnings
 from datacenter import DataCenter
 import numpy.random
+import operator
 
 warnings.filterwarnings("ignore")
 
@@ -252,28 +253,47 @@ class AntColonyOptimizer:
             raise ValueError("Invalid mode!  Choose 'min' or 'max'.")
 
     def get_best_fit(self, task):
-        distance = []
-        for dc in DataCenter.dcs:
-            distance.append(pow(dc.x-task.x, 2)+pow(dc.x-task.x, 2))
-
-        distance.sort()
-
+        distances = []
         i = 0
-        while i < len(distance):
+        for dc in DataCenter.dcs:
+            distances.append({
+                "i": i,
+                "d": pow(dc.x - task.x, 2) + pow(dc.x - task.x, 2)
+            })
+            i = i + 1
 
-            for t in range(len(DataCenter.dcs[i].servers)):
-                rns = random.randint(0, len(DataCenter.dcs[i].servers) - 1)
+        distances.sort(key=operator.itemgetter('d'))
+
+        for distance in distances:
+
+            i = distance['i']
+            n = len(DataCenter.dcs[i].servers)
+
+            for t in range(n):
+                rns = random.randint(0, n - 1)
 
                 if not DataCenter.dcs[i].servers[rns].status:
                     DataCenter.dcs[i].servers[rns].assign_task(task)
                     return DataCenter.dcs[i].servers[rns]
 
-            for j in range(len(DataCenter.dcs[i].servers)):
-                if DataCenter.dcs[i].servers[j].status:
-                    print('Trying...')
+            for j in range(n):
+                if not DataCenter.dcs[i].servers[j].status:
+                    DataCenter.dcs[i].servers[j].assign_task(task)
+                    return DataCenter.dcs[i].servers[j]
 
-            i = i + 1
+        for distance in distances:
+            i = distance['i']
+            n = len(DataCenter.dcs[i].servers)
+            m = 0
 
+            for j in range(n):
+                if DataCenter.dcs[i].servers[j].free_after < DataCenter.dcs[i].servers[m].free_after:
+                    m = j
+
+            DataCenter.dcs[i].servers[m].assign_task(task)
+            return DataCenter.dcs[i].servers[m]
+
+        print(DataCenter.dcs[i].name + ', all servers are busy...')
         return False
 
     def plot(self):
