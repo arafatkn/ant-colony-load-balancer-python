@@ -5,10 +5,10 @@ import time
 
 class Task:
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, t=0):
         self.id = ''.join(random.choice(string.ascii_uppercase) for _ in range(6))
         self.state = "pending"
-        self.required_time = self.analyze_execution_time()
+        self.required_time = self.analyze_execution_time() if t == 0 else t
         self.dc = ''
         self.server = ''
         self.x = x

@@ -258,7 +258,7 @@ class AntColonyOptimizer:
         for dc in DataCenter.dcs:
             distances.append({
                 "i": i,
-                "d": pow(dc.x - task.x, 2) + pow(dc.x - task.x, 2)
+                "d": pow(float(dc.x - task.x), 2) + pow(float(dc.y - task.y), 2)
             })
             i = i + 1
 

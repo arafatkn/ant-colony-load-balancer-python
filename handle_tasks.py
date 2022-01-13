@@ -1,4 +1,6 @@
+import csv
 import random
+import sys
 import time
 import threading
 from aco_load_balancer import AcoLoadBalancer
@@ -14,12 +16,19 @@ class HandleTasks(object):
 
     @staticmethod
     def run():
-        while True:
-            num = random.randint(5, 10)  # input("How many new task: ")
-            tasks = list()
-            for i in range(int(num)):
-                task = Task(random.randint(0, 50), random.randint(0, 50))
-                tasks.append(task)
-                print("Task created: (", task.x, ",", task.y, "). ID:", task.id)
-            AcoLoadBalancer.add(tasks)
-            time.sleep(random.randint(10, 15))
+        st = time.time()
+        filename = 'data/tasks.csv'
+        with open(filename, newline='') as f:
+            reader = csv.reader(f)
+            try:
+                next(reader, None)
+                for row in reader:
+                    if st + int(row[3]) > time.time():
+                        time.sleep(st + int(row[3]) - time.time())
+
+                    task = Task(int(row[0]), int(row[1]), float(row[2]))
+                    print("Task created: (", task.x, ",", task.y, "). ID:", task.id)
+                    AcoLoadBalancer.append(task)
+
+            except csv.Error as e:
+                sys.exit('file {}, line {}: {}'.format(filename, reader.line_num, e))
